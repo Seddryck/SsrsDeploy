@@ -56,14 +56,22 @@ namespace RsPackage.Parser.Xml
                 var description = reportNode.SelectSingleNode("./Description")?.InnerXml;
                 var hidden = bool.Parse(reportNode.Attributes["Hidden"]?.Value ?? bool.FalseString);
 
-                reportService.Create(name, ParentPath, path, description, hidden, Root?.DataSources, Root?.SharedDatasets);
+                var dataSetNodes = reportNode.SelectNodes("./DateSetMap/DataSet");
+
+                var localDateSetMap = new Dictionary<string, string>();
+                foreach (XmlNode dataSetNode in dataSetNodes)
+                {
+                    localDateSetMap.Add(dataSetNode.Attributes["Name"].Value, dataSetNode.Attributes["Reference"].Value);
+                }
+
+                reportService.Create(name, ParentPath, path, description, hidden, Root?.DataSources, Root?.SharedDatasets, localDateSetMap);
 
                 foreach (var childParser in ChildrenParsers)
                 {
                     childParser.ParentPath = $"{ParentPath}/{name}";
                     childParser.Execute(reportNode);
                 }
-                    
+
             }
         }
     }

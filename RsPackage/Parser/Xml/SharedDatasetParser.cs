@@ -38,13 +38,17 @@ namespace RsPackage.Parser.Xml
                     path = Path.Combine(RootPath ?? string.Empty, path);
 
                 var description = sharedDatasetNode.SelectSingleNode("./Description")?.InnerXml;
+
                 var hidden = bool.Parse(sharedDatasetNode.Attributes["Hidden"]?.Value ?? bool.FalseString);
                 var dataSourceName = sharedDatasetNode.Attributes["DataSource"]?.Value ?? string.Empty;
+
+                var overwrite = bool.Parse(sharedDatasetNode.Attributes["Overwrite"]?.Value ?? bool.TrueString);
+
 
                 sharedDatasetService.Create(name, ParentPath, path, description, hidden, dataSourceName, Root?.DataSources);
                 Root.SharedDatasets.Add(name, $"{ParentPath}/{name}");
             }
         }
-        
+
     }
 }

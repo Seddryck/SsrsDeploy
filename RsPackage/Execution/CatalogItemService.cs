@@ -27,7 +27,7 @@ namespace RsPackage.Execution
             this.labelItem = labelItem;
         }
 
-        public  Warning[] Create(string name, string parent, string path, string description, bool hidden)
+        public Warning[] Create(string name, string parent, string path, string description, bool hidden)
         {
             if (!File.Exists(path))
             {
@@ -62,7 +62,6 @@ namespace RsPackage.Execution
             }
             catch (Exception ex)
             {
-
                 OnError(ex.Message);
             }
 
@@ -70,13 +69,13 @@ namespace RsPackage.Execution
             return warnings;
         }
 
-      
-
-        
 
 
 
-        
-        
+
+
+
+
+
     }
 }

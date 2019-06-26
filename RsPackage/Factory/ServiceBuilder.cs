@@ -24,7 +24,7 @@ namespace RsPackage.Factory
             this.services = new Dictionary<Type, BaseService>();
             this.isBuilt = false;
         }
-            
+
         public void Setup(Options options)
         {
             this.options = options;
@@ -39,6 +39,7 @@ namespace RsPackage.Factory
             AddService(new FolderService(rs));
             AddService(new DataSourceService(rs));
             AddService(new PolicyService(rs));
+            AddService(new SharedDatasetService(rs));
             this.isBuilt = true;
         }
 
@@ -89,6 +90,11 @@ namespace RsPackage.Factory
         public DataSourceService GetDataSourceService()
         {
             return (DataSourceService)GetService(typeof(DataSourceService));
+        }
+
+        public SharedDatasetService GetDataSetService()
+        {
+            return (SharedDatasetService)GetService(typeof(SharedDatasetService));
         }
 
         public PolicyService GetPolicyService()

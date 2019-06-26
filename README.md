@@ -42,19 +42,23 @@ RsPackage is a tool to facilitate the automation of the deployment of reports, d
    <Report Name="My first report" Hidden="True">
       <Description>This is my first report to be published</Description>
       <Path>My1stReport.rdl</Path>
+	  <DateSetMap>
+        <DataSet Name="DataSetA" Reference="DataSet1" />
+        <DataSet Name="DataSetB" Reference="DataSet2" />
+      </DateSetMap>
    </Report>
    <Report Name="My second report"/>
 </Folder>
 ```
 * ```<DataSource>``` defines the name of data source and optionaly its filename (Element ```Path```), and  preserve (attribute ```overwrite```)
 ``` xml
-<DataSource Name="My data source" overwrite="false">
+<DataSource Name="My data source" Overwrite="False">
   <Path>MyDS.rds</Path>
 </DataSource>
 ```
 * ```<DataSet>``` defines the name of Shared Dataset and optionaly its filename (Element ```Path```)
 ``` xml
-<DataSet Name="My datasets">
+<DataSet Name="My datasets" Overwrite="False" DataSource="My data source">
   <Path>MyDS.rsd<Path>
 </DataSet>
 ```

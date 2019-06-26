@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using System.IO;
@@ -21,20 +22,42 @@ namespace RsPackage.Execution
 
         public virtual void Create(string name, string parent, string path, string description, bool hidden, string dataSourceName, IDictionary<string, string> dataSources)
         {
-            var warnings = Create(name, parent, path, description, hidden);
+
+            description = "";
+
+            Warning[] warnings = null;
+            try
+            {
+                warnings = Create(name, parent, path, description, hidden);
+            }
+            catch (Exception e)
+            {
+                OnWarning(e.Message);
+            }
+
             if (warnings != null)
             {
                 foreach (var warning in warnings)
                 {
                     if (!(warning.Code == "rsDataSourceReferenceNotPublished" && dataSources.ContainsKey(dataSourceName)))
+                    {
                         OnWarning(warning.Message);
+                    }
+
+                    if (warning.Code == "rsDataSourceReferenceNotPublished" && dataSourceName == "")
+                    {
+                        var result = from Match match in Regex.Matches(warning.Message, "‘(.*?)’") select match.Groups[1].Value;
+                        dataSourceName = result.ToArray()[1];
+                    }
                 }
             }
             ReferenceItem(name, parent, dataSourceName, dataSources);
         }
 
-        protected virtual void ReferenceItem(string name, string parent, string reference, IDictionary<string, string> references)
+        protected virtual void ReferenceItem(string name, string parent, string reference, IDictionary<string, string> referencesOld)
         {
+            var references = new Dictionary<string, string>(referencesOld, StringComparer.InvariantCultureIgnoreCase);
+
             var item = reportingService.GetItemReferences($"{parent}/{name}", "DataSource")[0];
 
             var dataSourceRef = new ItemReference();

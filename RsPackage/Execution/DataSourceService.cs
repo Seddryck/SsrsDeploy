@@ -14,16 +14,16 @@ namespace RsPackage.Execution
     public class DataSourceService : BaseService
     {
         public DataSourceService()
-        {}
+        { }
 
-        public DataSourceService(ReportingService2010 ReportingService) 
+        public DataSourceService(ReportingService2010 ReportingService)
             : base(ReportingService)
-        {}
+        { }
 
         public virtual void Create(string name, string parent, string path, bool overwrite)
         {
             //If file extension is not specied we need to check the existence of both
-            if (Path.GetExtension(path)!=".rsds" && Path.GetExtension(path) != ".rds")
+            if (Path.GetExtension(path) != ".rsds" && Path.GetExtension(path) != ".rds")
             {
                 if (File.Exists($"{path}.rsds"))
                     path = $"{path}.rsds";
@@ -81,8 +81,31 @@ namespace RsPackage.Execution
             }
 
             Warning[] warnings = null;
-            OnInformation($"Creating DataSource '{name}' in '{parent}'");
-            reportingService.CreateCatalogItem("DataSource", name, parent, overwrite, definition, null, out warnings);
+            OnInformation($"Creating DataSource '{name}' in '{parent}' with overwrite:{overwrite}");
+
+
+            var fullPath = parent == "/" ? $"/{name}" : $"{parent}/{name}";
+
+            if (overwrite == false && reportingService.GetItemType(fullPath) == "DataSource")
+            {
+                OnWarning($"DataSource '{name}' in '{parent}' already exist.");
+            }
+            else
+            {
+                reportingService.CreateCatalogItem("DataSource", name, parent, overwrite, definition, null, out warnings);
+            }
+
+
+
+            //try
+            //{
+            //    reportingService.CreateCatalogItem("DataSource", name, parent, overwrite, definition, null, out warnings);
+            //}
+            //catch (Exception e)
+            //{
+            //    //Not sure how to catch only Microsoft.ReportingServices.Diagnostics.Utilities.ItemAlreadyExistsException
+            //    OnWarning(e.Message);
+            //}
 
             if (warnings != null)
                 foreach (var warning in warnings)

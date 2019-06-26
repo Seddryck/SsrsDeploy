@@ -32,13 +32,15 @@ namespace RsPackage.Factory
 
             var policyParser = new PolicyParser(serviceBuilder.GetPolicyService());
             var dataSourceParser = new DataSourceParser(serviceBuilder.GetDataSourceService());
+            var dataSetParser = new SharedDatasetParser(serviceBuilder.GetDataSetService());
             var reportParser = new ReportParser(serviceBuilder.GetReportService(), new[] { policyParser });
-            var folderParser = new FolderParser(serviceBuilder.GetFolderService(), new IParser[] { policyParser, dataSourceParser, reportParser });
-            
+            var folderParser = new FolderParser(serviceBuilder.GetFolderService(), new IParser[] { policyParser, dataSourceParser, reportParser, dataSetParser });
+
             parser.ChildParsers.Add(dataSourceParser);
+            parser.ChildParsers.Add(dataSetParser);
             parser.ChildParsers.Add(reportParser);
             parser.ChildParsers.Add(folderParser);
-            
+
             return parser;
         }
 

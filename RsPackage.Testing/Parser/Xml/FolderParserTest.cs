@@ -67,7 +67,7 @@ namespace RsPackage.Testing.Parser.Xml
             var folderService = mockFolderService.Object;
 
             var stubReportService = new Mock<ReportService>();
-            stubReportService.Setup(s => s.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<Dictionary<string, string>>())).Verifiable();
+            stubReportService.Setup(s => s.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<Dictionary<string, string>>(), null)).Verifiable();
             var reportService = stubReportService.Object;
 
             var stubReportParser = new Mock<ReportParser>(reportService);
